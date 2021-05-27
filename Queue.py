@@ -17,7 +17,7 @@ class Queue:
         self.programarFinalServei(time,entitat)
 
     def enviarEsdeveniment(self, event):
-        self.server.###enviar esdeveniment
+        self.server.#enviar esdeveniment
 
     def tractarEsdeveniment(self, event):
         if (self.server.state == idle):
@@ -50,7 +50,7 @@ class Queue:
             if (queue.estat==idle):
                 queue.recullEntitat(event.time,event.entitat)
             ...
-        self.estat=idle
+        self.estat=idleeeee
 
     ...
 
