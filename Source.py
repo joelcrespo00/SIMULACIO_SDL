@@ -1,17 +1,14 @@
 # millor treballar amb define o algun sistema simular a l'enum de C++
-from enumeracions import *
+from enumerations import Enumerations
 from numpy.random import random
-
-from Server import *
-from scipy.stats import uniform
-
+from Event import *
 
 class Source:
 
     def __init__(self, scheduler):
         # inicialitzar element de simulació
-        entitatsCreades = 0
-        self.state = idle
+        self.entitatsCreades = 0
+        self.state = Enumerations.idle
         self.scheduler = scheduler
         self.queue1 = None
         self.queue2 = None
@@ -25,8 +22,7 @@ class Source:
             self.simulationStart(event)
 
         if (event.tipus == 'NEXT ARRIVAL'):
-            self.processNextArrival()
-        ...
+            self.processNextArrival(event)
 
     def simulationStart(self, event):
         nouEvent = self.properaArribada(0)
@@ -52,7 +48,7 @@ class Source:
         tempsEntreArribades = self.tArribades()
         # incrementem estadistics si s'escau
         self.entitatsCreades = self.entitatsCreades + 1
-        self.state = busy
+        self.state = Enumerations.busy
         # programació propera arribada
         return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, None)
 

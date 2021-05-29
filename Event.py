@@ -7,6 +7,8 @@ class Event:
         self.type = type
         # instant en que succeirà l'esdeveniment
         self.time = time
+        # entitat associada
+        self.entity = entity
 
     # Podríem delegar l'esdeveniment a l'objecte des de l'event o des del scheduler
     def tractaresdeveniment(self):

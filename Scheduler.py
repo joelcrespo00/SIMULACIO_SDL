@@ -1,31 +1,30 @@
-from Server import *
+from ServerB1 import *
+from ServerB2 import *
 from Source import *
-from Event import *
-from Queue import *
+from QueueB1 import *
+from QueueB2 import *
 from ServerR import *
 
 
 class Scheduler:
     currentTime = 0
     eventList = []
-    ...
 
     def __init__(self):
         # creació dels objectes que composen el meu model
         self.source = Source(self)
         #########################################
-        self.QueueB1 = Queue()
-        self.QueueB2 = Queue()
-        self.ServerB1 = Server()
-        self.ServerB2 = Server()
+        self.QueueB1 = QueueB1()
+        self.QueueB2 = QueueB2()
+        self.ServerB1 = ServerB1(self)
+        self.ServerB2 = ServerB2(self)
         #########################################
-        self.ServerR = ServerR()
+        self.ServerR = ServerR(self)
 
-        self.source.crearConnexio(self.QueueB1)
-        self.source.crearConnexio(self.QueueB2)
+        self.source.crearConnexio(self.QueueB1, self.QueueB2)
         #######################################
-        self.QueueB1.crearConnexio(self.ServerB1)
-        self.QueueB2.crearConnexio(self.ServerB2)
+        self.QueueB1.crearConnexio(self.source, self.ServerB1)
+        self.QueueB2.crearConnexio(self.source, self.ServerB2)
         #######################################
         self.ServerB1.crearConnexio(self.ServerR, self.QueueB1)
         self.ServerB2.crearConnexio(self.ServerR, self.QueueB2)

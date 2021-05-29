@@ -1,58 +1,53 @@
 #millor treballar amb define o algun sistema simular a l'enum de C++
-from enumeracions import *
-from Server import *
+from enumerations import Enumerations
 from Event import *
+from numpy.random import random
 
 class ServerR:
 
     def __init__(self,scheduler):
         # inicialitzar element de simulació
-        entitatsTractades=0
-        self.state=idle
+        self.entitatsTractades=0
+        self.state=Enumerations.idle
         self.scheduler=scheduler
-        self.entitatActiva=null
+        self.entitatActiva=None
         
     def crearConnexio(self, server1, server2):
         self.server1=server1
         self.server2=server2
-    
-    def recullEntitat(self,time,entitat):
-        self.entitatsTractades=entitat
-        self.programarFinalServei(time,entitat)
+
+    def recullEntitat(self, time, entitat, via):
+        self.entitatsTractades += 1
+        self.state = Enumerations.busy
+        self.entitatActiva = entitat
+        event_proces = self.programarFinalServei(time, entitat)
+        if via == 1:
+            event_proces.type = "NEW SERVICE R FROM B1"
+        else:
+            event_proces.type = "NEW SERVICE R FROM B2"
+        self.tractarEsdeveniment(event_proces)
 
     def tractarEsdeveniment(self, event):
-        if (event.tipus=='SIMULATION START'):
-            self.simulationStart(event)
-
-        if (event.tipus=='END_SERVICE'):
-            self.processarFiServei(event)
+        event_nou = (self.server1, "FINISH PROCESS SERVERR", event.time, event.entity)
+        if event.type == 'NEW SERVICE R FROM B1':
+            self.server1.tractarEsdeveniment(event_nou)
+        else:
+            self.server2.tractarEsdeveniment(event_nou)
+        self.state = Enumerations.idle
+        self.entitatActiva = None
 
     def simulationStart(self,event):
-        self.state=idle
+        self.state=Enumerations.idle
         self.entitatsTractades=0
 
     def programarFinalServei(self, time,entitat):
         # que triguem a fer un servei (aleatorietat)
-        tempsServei = _alguna_funcio ()
+        tempsServei = self.tServei_R()
         # incrementem estadistics si s'escau
-        self.entitatsTractades=self.entitatsTractades+1
-        self.state = busy
         # programació final servei
         return Event(self,'END_SERVICE', time+ tempsServei,entitat)
 
-    def processarFiServei(self,event):
-        # Registrar estadístics
-        self.entitatsTractades=self.entitatsTractades+1
-        # Mirar si es pot transferir a on per toqui
-        if (server.estat==idle):
-            #transferir entitat (es pot fer amb un esdeveniment immediat o invocant a un métode de l'element)
-            server.recullEntitat(event.time,event.entitat)
-        else:
-            if (queue.estat==idle):
-                queue.recullEntitat(event.time,event.entitat)
-            ...
-        self.estat=idle
-    
-    ... 
+    def tServei_R(self):
+        return random.uniform(min=5, max=10)
 
         
