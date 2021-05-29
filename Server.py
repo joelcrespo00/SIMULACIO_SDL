@@ -10,7 +10,7 @@ class Server:
         entitatsTractades=0
         self.state=idle
         self.scheduler=scheduler
-        self.entitatActiva=null
+        self.entitatActiva=None
         
     def crearConnexio(self,server2,queue):
         self.queue=queue

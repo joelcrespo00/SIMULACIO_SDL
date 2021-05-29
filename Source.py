@@ -53,7 +53,7 @@ class Source:
         # incrementem estadistics si s'escau
         self.entitatsCreades = self.entitatsCreades + 1
         self.state = busy
-        # programació primera arribada
+        # programació propera arribada
         return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, None)
 
     def tArribades(self):
