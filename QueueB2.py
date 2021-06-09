@@ -18,6 +18,7 @@ class QueueB2:
         self.entitatsTractades += 1
         if self.entitats:
             self.entitats += 1
+            
         else:
             event_nou = Event(self, "NOVA ENTITAT", time, entitat) #A LA MATEIXA CUA
             self.tractarEsdeveniment(event_nou)

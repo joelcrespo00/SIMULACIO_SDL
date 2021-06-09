@@ -1,20 +1,21 @@
-#millor treballar amb define o algun sistema simular a l'enum de C++
+# millor treballar amb define o algun sistema simular a l'enum de C++
 from enumerations import Enumerations
 from Event import *
 from numpy.random import random
 
+
 class ServerR:
 
-    def __init__(self,scheduler):
+    def __init__(self, scheduler):
         # inicialitzar element de simulació
-        self.entitatsTractades=0
-        self.state=Enumerations.idle
-        self.scheduler=scheduler
-        self.entitatActiva=None
-        
+        self.entitatsTractades = 0
+        self.state = Enumerations.idle
+        self.scheduler = scheduler
+        self.entitatActiva = None
+
     def crearConnexio(self, server1, server2):
-        self.server1=server1
-        self.server2=server2
+        self.server1 = server1
+        self.server2 = server2
 
     def recullEntitat(self, time, entitat, via):
         self.entitatsTractades += 1
@@ -37,17 +38,15 @@ class ServerR:
         self.entitatActiva = None
 
     def simulationStart(self):
-        self.state=Enumerations.idle
-        self.entitatsTractades=0
+        self.state = Enumerations.idle
+        self.entitatsTractades = 0
 
-    def programarFinalServei(self, time,entitat):
+    def programarFinalServei(self, time, entitat):
         # que triguem a fer un servei (aleatorietat)
         tempsServei = self.tServei_R()
         # incrementem estadistics si s'escau
         # programació final servei
-        return Event(self,'END_SERVICE', time+ tempsServei,entitat)
+        return Event(self, 'END_SERVICE', time + tempsServei, entitat)
 
     def tServei_R(self):
         return random.uniform(min=5, max=10)
-
-        

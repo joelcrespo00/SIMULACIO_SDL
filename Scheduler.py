@@ -64,7 +64,7 @@ class Scheduler:
 
     def tractarEsdeveniment(self, event):
         print("LLEGO A SIMULATION START")
-        if (event.type == "SIMULATION_START"):
+        if event.type == "SIMULATION_START":
             self.QueueB1.simulationStart()
             self.QueueB2.simulationStart()
             self.ServerB1.simulationStart()
@@ -72,18 +72,36 @@ class Scheduler:
             self.ServerR.simulationStart()
             self.source.simulationStart()
 
-
     def recollirEstadistics(self):
-        pass
+        SOURCE = self.source.entitatsCreades
+        QB1 = self.QueueB1.entitatsTractades
+        QB2 = self.QueueB1.entitatsTractades
+        SB1 = self.QueueB1.entitatsTractades
+        SB2 = self.QueueB1.entitatsTractades
+        print("ENTITATS TRACTADES EN TOTAL: \n")
+        print("%d \n", SOURCE)
+        print("ENTITATS TRACTADES EN QUEUEB1: ")
+        print("%d \n", QB1)
+        print("ENTITATS TRACTADES EN QUEUEB2: ")
+        print("%d \n", QB2)
+        print("ENTITATS TRACTADES EN SERVERB1: ")
+        print("%d \n", SB1)
+        print("ENTITATS TRACTADES EN SERVERB2: ")
+        print("%d \n", SB2)
+        print("PERCENTATGE D'ENTITATS TRACTADES PER CADA BOTIGA: \n")
+        PB1 = (QB1/SOURCE)*100
+        PB2 = (QB2/SOURCE)*100
+        print("BOTIGA 1: %d \n", PB1)
+        print("BOTIGA 2: %d \n", PB2)
 
     def configurarModel(self):
-        #PARAMETRITZAR TEMPS ENTRE ARRIBADES A LA SOURCE
+        # PARAMETRITZAR TEMPS ENTRE ARRIBADES A LA SOURCE
         print("INTRODUEIX EL MINIM TEMPS ENTRE ARRIBADES: \n")
         min = int(input())
         print("INTRODUEIX EL MAXIM TEMPS ENTRE ARRIBADES: \n")
         max = int(input())
-        self.source.min=min
-        self.source.max=max
+        self.source.min = min
+        self.source.max = max
 
 
 if __name__ == "__main__":
