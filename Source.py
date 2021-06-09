@@ -1,7 +1,9 @@
 # millor treballar amb define o algun sistema simular a l'enum de C++
 from enumerations import Enumerations
 from numpy.random import random
+from random import uniform
 from Event import *
+
 
 class Source:
 
@@ -12,19 +14,21 @@ class Source:
         self.scheduler = scheduler
         self.queue1 = None
         self.queue2 = None
+        self.min = 0
+        self.max = 1
 
     def crearConnexio(self, queue1, queue2):
         self.queue1 = queue1
         self.queue2 = queue2
 
     def tractarEsdeveniment(self, event):
-        if (event.tipus == 'SIMULATION START'):
-            self.simulationStart(event)
+        if (event.type == 'SIMULATION START'):
+            self.simulationStart()
 
-        if (event.tipus == 'NEXT ARRIVAL'):
+        if (event.type == 'NEXT ARRIVAL'):
             self.processNextArrival(event)
 
-    def simulationStart(self, event):
+    def simulationStart(self):
         nouEvent = self.properaArribada(0)
         self.scheduler.afegirEsdeveniment(nouEvent)
 
@@ -40,7 +44,7 @@ class Source:
             # transferir entitat
             self.queue2.recullEntitat(event.time, entitat)
         # Cal programar la següent arribada
-        nouEvent = self.properaArribada(event.temps)
+        nouEvent = self.properaArribada(event.time)
         self.scheduler.afegirEsdeveniment(nouEvent)
 
     def properaArribada(self, time):
@@ -53,7 +57,9 @@ class Source:
         return Event(self, 'NEXT ARRIVAL', time + tempsEntreArribades, None)
 
     def tArribades(self):
-        return random.uniform(min=0, max=50)
+        min = self.min
+        max = self.max
+        return uniform(min, max)
 
     def crearEntitat(self, self1):
         pass

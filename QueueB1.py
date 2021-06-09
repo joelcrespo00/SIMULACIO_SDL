@@ -23,7 +23,7 @@ class QueueB1:
             self.tractarEsdeveniment(event_nou)
 
     def enviarEsdeveniment(self, event):
-        self.server.recullEntitat(event.entity)  # QueueB1.pyenviar esdeveniment
+        self.server.recullEntitat(event.time, event.entity)  # QueueB1.pyenviar esdeveniment
 
     def tractarEsdeveniment(self, event):
         if event.type == "NOVA ENTITAT": #PROVE DE LA CUA
@@ -32,7 +32,7 @@ class QueueB1:
                 self.enviarEsdeveniment(event_server)
                 self.server.state = Enumerations.busy
             else:
-                self.esdeveniments += event_server
+                self.esdeveniments.append(event_server)
                 self.entitats += 1
                 self.state = Enumerations.noempty
         if event.type == "FINISH PROCESS SERVERB1": #PROVE DEL SERVIDOR
@@ -45,7 +45,7 @@ class QueueB1:
                 self.state = Enumerations.empty
                 self.server.state = Enumerations.idle
 
-    def simulationStart(self, event):
+    def simulationStart(self):
         self.state = Enumerations.empty
         self.entitatsTractades = 0
 

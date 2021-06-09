@@ -2,6 +2,7 @@
 from Event import *
 from enumerations import Enumerations
 from numpy.random import random
+from random import uniform
 
 class ServerB2:
     def __init__(self,scheduler):
@@ -41,7 +42,7 @@ class ServerB2:
             self.state = Enumerations.idle
             self.entitatActiva = None
 
-    def simulationStart(self,event):
+    def simulationStart(self):
         self.state=Enumerations.idle
         self.entitatsTractades=0
 
@@ -53,5 +54,5 @@ class ServerB2:
         return Event(self,'END_SERVICE', time+ tempsServei,entitat)
 
     def tServei_B2(self):
-        return random.uniform(min=20, max=50)
+        return uniform(20, 50)
 

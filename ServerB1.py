@@ -42,7 +42,7 @@ class ServerB1:
             self.state = Enumerations.idle
             self.entitatActiva = None
 
-    def simulationStart(self, event):
+    def simulationStart(self):
         self.state = Enumerations.idle
         self.entitatsTractades = 0
 

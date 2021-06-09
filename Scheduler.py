@@ -47,7 +47,7 @@ class Scheduler:
             self.currentTime = event.time
             # deleguem l'acció a realitzar de l'esdeveniment a l'objecte que l'ha generat
             # també podríem delegar l'acció a un altre objecte
-            event.objecte.tractarEsdeveniment(event)
+            event.object.tractarEsdeveniment(event)
 
         # recollida d'estadístics
         self.recollirEstadistics()
@@ -63,15 +63,27 @@ class Scheduler:
         return event
 
     def tractarEsdeveniment(self, event):
-        if (event.tipus == "SIMULATION_START"):
-            pass
-            # comunicar a tots els objectes que cal preparar-se
+        print("LLEGO A SIMULATION START")
+        if (event.type == "SIMULATION_START"):
+            self.QueueB1.simulationStart()
+            self.QueueB2.simulationStart()
+            self.ServerB1.simulationStart()
+            self.ServerB2.simulationStart()
+            self.ServerR.simulationStart()
+            self.source.simulationStart()
+
 
     def recollirEstadistics(self):
         pass
 
     def configurarModel(self):
-        pass
+        #PARAMETRITZAR TEMPS ENTRE ARRIBADES A LA SOURCE
+        print("INTRODUEIX EL MINIM TEMPS ENTRE ARRIBADES: \n")
+        min = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS ENTRE ARRIBADES: \n")
+        max = int(input())
+        self.source.min=min
+        self.source.max=max
 
 
 if __name__ == "__main__":
