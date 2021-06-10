@@ -23,29 +23,29 @@ class Source:
         if event.type == 'SIMULATION START':
             self.simulationStart()
 
-        if event.type == 'NOVA ENTITAT':
+        if event.type == 'NEXT ARRIVAL':
             self.processNextArrival(event)
 
     def simulationStart(self):
-        nouEvent = self.properaArribada(0)
-        self.scheduler.afegirEsdeveniment(nouEvent)
+        propera = Event(self, 'NEXT ARRIVAL', 5, None)
+        self.scheduler.afegirEsdeveniment(propera)
 
     def processNextArrival(self, event):
         nouEvent = self.properaArribada(event.time)
         self.scheduler.afegirEsdeveniment(nouEvent)
+        propera = Event(self, 'NEXT ARRIVAL', nouEvent.time, None)
+        self.scheduler.afegirEsdeveniment(propera)
 
     def properaArribada(self, time):
         tempsEntreArribades = self.tArribades()
-        print(tempsEntreArribades)
         self.entitatsCreades = self.entitatsCreades + 1
         self.state = Enumerations.busy
         cua = randrange(10)
         entitat = self.crearEntitat(self)
         if cua % 2 == 0:  ##ENVIAR A QueueB1
-            return Event(self.queue1, 'NOVA ENTITAT', time + tempsEntreArribades, entitat)
+            return Event(self.queue1, 'NEW SERVICE', time + tempsEntreArribades, entitat)
         else:  # ENVIAR A SERVERB2
-            return Event(self.queue2, 'NOVA ENTITAT', time + tempsEntreArribades, entitat)
-
+            return Event(self.queue2, 'NEW SERVICE', time + tempsEntreArribades, entitat)
 
     def tArribades(self):
         min = self.min

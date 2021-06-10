@@ -23,22 +23,26 @@ class Server:
         self.state = Enumerations.busy
         self.entitatActiva = entitat
         event_proces = self.programarFinalServei(time, entitat)
-        s = "NEW PROCESS SERVER R FROM"+self.name
-        event_serverR = Event(self.server, s, event_proces.time, entitat)
+        s = "NEW PROCESS SERVER R FROM "+self.name
+        event_serverR = Event(self, s, event_proces.time, entitat)
         self.scheduler.afegirEsdeveniment(event_serverR)
 
     def enviarEsdevenimentServerR(self, event):
         self.server.recullEntitat(event.time, event.entity, self.name)
 
     def tractarEsdeveniment(self, event):
-        s = "NEW PROCESS SERVER R FROM"+self.name
-        if event.type == s:
+        s = "NEW PROCESS SERVER R FROM "+self.name
+        if event.type == "NEW SERVICE " + self.name:
+            self.recullEntitat(event.time, event.entity)
+        elif event.type == s:
             if self.server.state == Enumerations.idle:
+                event.object = self.server
                 self.scheduler.afegirEsdeveniment(event)
             else:
                 self.waitforavailability()
+                event.object = self.server
                 self.scheduler.afegirEsdeveniment(event)
-        if event.type == 'FINISH PROCESS SERVERR':
+        elif event.type == 'FINISH PROCESS SERVERR':
             s = "FINISH PROCESS SERVER "+self.name
             event_fi_servei = Event(self.queue, s, event.time, event.entity)
             self.state = Enumerations.idle

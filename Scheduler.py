@@ -2,7 +2,6 @@ from Server import *
 from Source import *
 from Queue import *
 from ServerR import *
-import time
 
 
 class Scheduler:
@@ -49,7 +48,7 @@ class Scheduler:
 
     def donamEsdeveniment(self):
         event = self.eventList.__getitem__(0)
-        self.eventList.pop()
+        self.eventList.pop(0)
         return event
 
     def tractarEsdeveniment(self, event):
@@ -81,10 +80,10 @@ class Scheduler:
         print("ENTITATS TRACTADES EN SERVERR: ")
         print(str(SR) + "\n")
         print("PERCENTATGE D'ENTITATS TRACTADES PER CADA BOTIGA: \n")
-#        PB1 = (QB1 / SOURCE) * 100
-#        PB2 = (QB2 / SOURCE) * 100
-#        print("BOTIGA 1: " + str(PB1) + "\n")
-#        print("BOTIGA 2: " + str(PB2) + "\n")
+        PB1 = (QB1 / SOURCE) * 100
+        PB2 = (QB2 / SOURCE) * 100
+        print("BOTIGA 1: " + str(PB1) + "\n")
+        print("BOTIGA 2: " + str(PB2) + "\n")
 
     def configurarModel(self):
         # PARAMETRITZAR TEMPS ENTRE ARRIBADES A LA SOURCE
@@ -94,27 +93,27 @@ class Scheduler:
         max = int(input())
         print("INTRODUEIX EL MAXIM TEMPS DE SIMULACIÓ: \n")
         maxt = int(input())
-        #print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 1: \n")
-        #minb1 = int(input())
-        #print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 1: \n")
-        #maxb1 = int(input())
-        #print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 2: \n")
-        #minb2 = int(input())
-        #print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 2: \n")
-        #maxb2 = int(input())
-        #print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR EN COMU: \n")
-        #mins = int(input())
-        #print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR EN COMU: \n")
-        #maxs = int(input())
+        print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 1: \n")
+        minb1 = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 1: \n")
+        maxb1 = int(input())
+        print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 2: \n")
+        minb2 = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 2: \n")
+        maxb2 = int(input())
+        print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR EN COMU: \n")
+        mins = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR EN COMU: \n")
+        maxs = int(input())
         self.maxtime = maxt
         self.source.min = min
         self.source.max = max
-        #self.ServerB1.min = minb1
-        #self.ServerB1.max = maxb1
-        #self.ServerB2.min = minb2
-        #self.ServerB2.max = maxb2
-        #self.ServerR.min = mins
-        #self.ServerR.max = maxs
+        self.ServerB1.min = minb1
+        self.ServerB1.max = maxb1
+        self.ServerB2.min = minb2
+        self.ServerB2.max = maxb2
+        self.ServerR.min = mins
+        self.ServerR.max = maxs
 
 
 if __name__ == "__main__":
