@@ -3,7 +3,8 @@ from Event import *
 
 
 class Queue:
-    def __init__(self, nom):
+    def __init__(self, scheduler, nom):
+        self.scheduler = scheduler
         self.state = None
         self.entitatsTractades = 0
         self.esdeveniments = []
@@ -22,7 +23,7 @@ class Queue:
             self.esdeveniments.append(event_nou)
         else:
             event_nou = Event(self, "NOVA ENTITAT", time, entitat)
-            self.tractarEsdeveniment(event_nou)
+            self.scheduler.afegirEsdeveniment(event_nou)
 
     def enviarEsdeveniment(self, event):
         self.server.recullEntitat(event.time, event.entity)
@@ -34,7 +35,7 @@ class Queue:
             event_server = Event(self.server, s, event.time, event.entity)
             if self.server.state == Enumerations.idle:
                 self.server.state = Enumerations.busy
-                self.enviarEsdeveniment(event_server)
+                self.scheduler.afegirEsdeveniment(event_server)
             else:
                 self.esdeveniments.append(event_server)
                 self.entitats += 1
@@ -44,7 +45,7 @@ class Queue:
                 event_server = self.esdeveniments.pop()
                 event_server.time = event.time
                 self.entitats -= 1
-                self.enviarEsdeveniment(event_server)
+                self.scheduler.afegirEsdeveniment(event_server)
             else:
                 self.state = Enumerations.empty
                 self.server.state = Enumerations.idle

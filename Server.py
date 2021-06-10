@@ -24,8 +24,8 @@ class Server:
         self.entitatActiva = entitat
         event_proces = self.programarFinalServei(time, entitat)
         s = "NEW PROCESS SERVER R FROM"+self.name
-        event_serverR = Event(object=self, type=s, time=event_proces.time, entity=entitat)
-        self.tractarEsdeveniment(event_serverR)
+        event_serverR = Event(self.server, s, event_proces.time, entitat)
+        self.scheduler.afegirEsdeveniment(event_serverR)
 
     def enviarEsdevenimentServerR(self, event):
         self.server.recullEntitat(event.time, event.entity, self.name)
@@ -34,16 +34,16 @@ class Server:
         s = "NEW PROCESS SERVER R FROM"+self.name
         if event.type == s:
             if self.server.state == Enumerations.idle:
-                self.enviarEsdevenimentServerR(event)
+                self.scheduler.afegirEsdeveniment(event)
             else:
                 self.waitforavailability()
-                self.enviarEsdevenimentServerR(event)
+                self.scheduler.afegirEsdeveniment(event)
         if event.type == 'FINISH PROCESS SERVERR':
             s = "FINISH PROCESS SERVER "+self.name
             event_fi_servei = Event(self.queue, s, event.time, event.entity)
             self.state = Enumerations.idle
             self.entitatActiva = None
-            self.queue.tractarEsdeveniment(event_fi_servei)
+            self.scheduler.afegirEsdeveniment(event_fi_servei)
 
     def waitforavailability(self):
         while self.server.state == Enumerations.busy:
