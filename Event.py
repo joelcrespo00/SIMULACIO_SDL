@@ -13,3 +13,4 @@ class Event:
     # Podríem delegar l'esdeveniment a l'objecte des de l'event o des del scheduler
     def tractaresdeveniment(self):
         self.object.tractaresdeveniment(self)
+

@@ -2,13 +2,13 @@ from enumerations import Enumerations
 from Event import *
 
 
-class QueueB1:
-    def __init__(self):
-        # inicialitzar element de simulació
+class Queue:
+    def __init__(self, nom):
         self.state = None
-        self.entitatsTractades = 0  ##Saber cuantes van a aquesta cua per estadistics
-        self.esdeveniments = []  # esdeveniments en la cua
+        self.entitatsTractades = 0
+        self.esdeveniments = []
         self.entitats = 0
+        self.nom = nom
 
     def crearConnexio(self, source, server):
         self.source = source
@@ -18,30 +18,33 @@ class QueueB1:
         self.entitatsTractades += 1
         if self.entitats:
             self.entitats += 1
-
+            event_nou = Event(self, "NOVA ENTITAT", time, entitat)
+            self.esdeveniments.append(event_nou)
         else:
-            event_nou = Event(self, "NOVA ENTITAT", time, entitat) #A LA MATEIXA CUA
+            event_nou = Event(self, "NOVA ENTITAT", time, entitat)
             self.tractarEsdeveniment(event_nou)
 
     def enviarEsdeveniment(self, event):
-        self.server.recullEntitat(event.time, event.entity)  # QueueB1.pyenviar esdeveniment
+        self.server.recullEntitat(event.time, event.entity)
+
 
     def tractarEsdeveniment(self, event):
-        if event.type == "NOVA ENTITAT": #PROVE DE LA CUA
-            event_server = Event(self.server, "NEW SERVICE B1", event.time, event.entity)
+        if event.type == "NOVA ENTITAT":
+            s = "NEW SERVICE "+self.nom
+            event_server = Event(self.server, s, event.time, event.entity)
             if self.server.state == Enumerations.idle:
-                self.enviarEsdeveniment(event_server)
                 self.server.state = Enumerations.busy
+                self.enviarEsdeveniment(event_server)
             else:
                 self.esdeveniments.append(event_server)
                 self.entitats += 1
                 self.state = Enumerations.noempty
-        if event.type == "FINISH PROCESS SERVERB1": #PROVE DEL SERVIDOR
+        if event.type == "FINISH PROCESS SERVER B1" or event.type == "FINISH PROCESS SERVER B2":
             if self.esdeveniments:
                 event_server = self.esdeveniments.pop()
                 event_server.time = event.time
-                self.enviarEsdeveniment(event_server)
                 self.entitats -= 1
+                self.enviarEsdeveniment(event_server)
             else:
                 self.state = Enumerations.empty
                 self.server.state = Enumerations.idle

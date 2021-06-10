@@ -1,8 +1,6 @@
-from ServerB1 import *
-from ServerB2 import *
+from Server import *
 from Source import *
-from QueueB1 import *
-from QueueB2 import *
+from Queue import *
 from ServerR import *
 
 
@@ -14,10 +12,10 @@ class Scheduler:
         # creació dels objectes que composen el meu model
         self.source = Source(self)
         #########################################
-        self.QueueB1 = QueueB1()
-        self.QueueB2 = QueueB2()
-        self.ServerB1 = ServerB1(self)
-        self.ServerB2 = ServerB2(self)
+        self.QueueB1 = Queue("B1")
+        self.QueueB2 = Queue("B2")
+        self.ServerB1 = Server(self, "B1")
+        self.ServerB2 = Server(self, "B2")
         #########################################
         self.ServerR = ServerR(self)
 
@@ -32,38 +30,30 @@ class Scheduler:
 
         self.simulationStart = Event(self, 'SIMULATION_START', 0, None)
         self.afegirEsdeveniment(self.simulationStart)
+        self.time = 0
 
     def run(self):
-        # configurar el model per consola, arxiu de text...
         self.configurarModel()
 
-        # rellotge de simulacio a 0
         self.currentTime = 0
-        # bucle de simulació (condició fi simulació llista buida)
         while self.eventList:
-            # recuperem event simulacio
             event = self.donamEsdeveniment()
-            # actualitzem el rellotge de simulacio
             self.currentTime = event.time
-            # deleguem l'acció a realitzar de l'esdeveniment a l'objecte que l'ha generat
-            # també podríem delegar l'acció a un altre objecte
             event.object.tractarEsdeveniment(event)
+            self.time -= 1
 
-        # recollida d'estadístics
+        print("SIMULACIÓ ACABADA")
         self.recollirEstadistics()
 
     def afegirEsdeveniment(self, event):
-        # inserir esdeveniment de forma ordenada
         self.eventList.append(event)
 
     def donamEsdeveniment(self):
-        # agafar el primer element de la llista
         event = self.eventList.__getitem__(0)
         self.eventList.pop()
         return event
 
     def tractarEsdeveniment(self, event):
-        print("LLEGO A SIMULATION START")
         if event.type == "SIMULATION_START":
             self.QueueB1.simulationStart()
             self.QueueB2.simulationStart()
@@ -75,24 +65,27 @@ class Scheduler:
     def recollirEstadistics(self):
         SOURCE = self.source.entitatsCreades
         QB1 = self.QueueB1.entitatsTractades
-        QB2 = self.QueueB1.entitatsTractades
-        SB1 = self.QueueB1.entitatsTractades
-        SB2 = self.QueueB1.entitatsTractades
+        QB2 = self.QueueB2.entitatsTractades
+        SB1 = self.ServerB1.entitatsTractades
+        SB2 = self.ServerB2.entitatsTractades
+        SR = self.ServerR.entitatsTractades
         print("ENTITATS TRACTADES EN TOTAL: \n")
-        print("%d \n", SOURCE)
+        print(str(SOURCE) + "\n")
         print("ENTITATS TRACTADES EN QUEUEB1: ")
-        print("%d \n", QB1)
+        print(str(QB1) + "\n")
         print("ENTITATS TRACTADES EN QUEUEB2: ")
-        print("%d \n", QB2)
+        print(str(QB2) + "\n")
         print("ENTITATS TRACTADES EN SERVERB1: ")
-        print("%d \n", SB1)
+        print(str(SB1) + "\n")
         print("ENTITATS TRACTADES EN SERVERB2: ")
-        print("%d \n", SB2)
+        print(str(SB2) + "\n")
+        print("ENTITATS TRACTADES EN SERVERR: ")
+        print(str(SR) + "\n")
         print("PERCENTATGE D'ENTITATS TRACTADES PER CADA BOTIGA: \n")
-        PB1 = (QB1/SOURCE)*100
-        PB2 = (QB2/SOURCE)*100
-        print("BOTIGA 1: %d \n", PB1)
-        print("BOTIGA 2: %d \n", PB2)
+        PB1 = (QB1 / SOURCE) * 100
+        PB2 = (QB2 / SOURCE) * 100
+        print("BOTIGA 1: " + str(PB1) + "\n")
+        print("BOTIGA 2: " + str(PB2) + "\n")
 
     def configurarModel(self):
         # PARAMETRITZAR TEMPS ENTRE ARRIBADES A LA SOURCE
@@ -100,8 +93,29 @@ class Scheduler:
         min = int(input())
         print("INTRODUEIX EL MAXIM TEMPS ENTRE ARRIBADES: \n")
         max = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SIMULACIÓ: \n")
+        maxt = int(input())
+        print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 1: \n")
+        minb1 = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 1: \n")
+        maxb1 = int(input())
+        print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 2: \n")
+        minb2 = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR DE LA BOTIGA 2: \n")
+        maxb2 = int(input())
+        print("INTRODUEIX EL MINIM TEMPS DE SERVEI DEL SERVIDOR EN COMU: \n")
+        mins = int(input())
+        print("INTRODUEIX EL MAXIM TEMPS DE SERVEI DEL SERVIDOR EN COMU: \n")
+        maxs = int(input())
+        self.time = maxt
         self.source.min = min
         self.source.max = max
+        self.ServerB1.min = minb1
+        self.ServerB1.max = minb1
+        self.ServerB2.min = minb2
+        self.ServerB2.max = minb2
+        self.ServerR.min = mins
+        self.ServerR.max = maxs
 
 
 if __name__ == "__main__":
