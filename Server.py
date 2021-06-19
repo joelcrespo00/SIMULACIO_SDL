@@ -21,7 +21,6 @@ class Server:
 
     def recullEntitat(self, time, entitat):
         self.entitatsTractades += 1
-        self.state = Enumerations.busy
         self.entitatActiva = entitat
         s = "NEW PROCESS SERVER R"
         tempsServei = self.tServei_B1()
@@ -37,6 +36,7 @@ class Server:
         elif event.type == "NEW PROCESS SERVER R":
             if self.server.state == Enumerations.idle:
                 event.object = self.server
+                self.state = Enumerations.busy
                 self.scheduler.afegirEsdeveniment(event)
             else:
                 self.state = Enumerations.block
@@ -49,8 +49,10 @@ class Server:
                 self.event_block.time = event.time
                 self.scheduler.afegirEsdeveniment(self.event_block)
                 self.event_block = None
-            self.state = Enumerations.idle
-            self.entitatActiva = None
+                self.state = Enumerations.busy
+            else:
+                self.state = Enumerations.idle
+                self.entitatActiva = None
             self.scheduler.afegirEsdeveniment(event_fi_servei)
 
     def simulationStart(self):
