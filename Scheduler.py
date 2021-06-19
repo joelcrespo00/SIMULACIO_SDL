@@ -43,8 +43,12 @@ class Scheduler:
         print("SIMULACIÓ ACABADA")
         self.recollirEstadistics()
 
+    def order(self, event):
+        return event.time
+
     def afegirEsdeveniment(self, event):
         self.eventList.append(event)
+        self.eventList.sort(key=self.order)
 
     def donamEsdeveniment(self):
         event = self.eventList.__getitem__(0)

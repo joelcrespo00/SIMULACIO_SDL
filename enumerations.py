@@ -5,3 +5,4 @@ class Enumerations(Enum):
     busy = 2
     empty = 3
     noempty = 4
+    block = 5

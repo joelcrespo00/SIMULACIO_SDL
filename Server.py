@@ -13,6 +13,7 @@ class Server:
         self.name = name
         self.min = 0
         self.max = 1
+        self.event_block = None
 
     def crearConnexio(self, server2, queue):
         self.queue = queue
@@ -22,44 +23,39 @@ class Server:
         self.entitatsTractades += 1
         self.state = Enumerations.busy
         self.entitatActiva = entitat
-        event_proces = self.programarFinalServei(time, entitat)
-        s = "NEW PROCESS SERVER R FROM "+self.name
-        event_serverR = Event(self, s, event_proces.time, entitat)
+        s = "NEW PROCESS SERVER R"
+        tempsServei = self.tServei_B1()
+        event_serverR = Event(self, s, time + tempsServei, entitat)
         self.scheduler.afegirEsdeveniment(event_serverR)
 
     def enviarEsdevenimentServerR(self, event):
         self.server.recullEntitat(event.time, event.entity, self.name)
 
     def tractarEsdeveniment(self, event):
-        s = "NEW PROCESS SERVER R FROM "+self.name
-        if event.type == "NEW SERVICE " + self.name:
+        if event.type == "NEW SERVICE":
             self.recullEntitat(event.time, event.entity)
-        elif event.type == s:
+        elif event.type == "NEW PROCESS SERVER R":
             if self.server.state == Enumerations.idle:
                 event.object = self.server
                 self.scheduler.afegirEsdeveniment(event)
             else:
-                self.waitforavailability()
-                event.object = self.server
-                self.scheduler.afegirEsdeveniment(event)
+                self.state = Enumerations.block
+                self.event_block = event
         elif event.type == 'FINISH PROCESS SERVERR':
-            s = "FINISH PROCESS SERVER "+self.name
-            event_fi_servei = Event(self.queue, s, event.time, event.entity)
+            s = "FINISH PROCESS SERVER"
+            event_fi_servei = Event(self.queue, s, event.time, None)
+            if self.state == Enumerations.block:
+                self.event_block.object = self.server
+                self.event_block.time = event.time
+                self.scheduler.afegirEsdeveniment(self.event_block)
+                self.event_block = None
             self.state = Enumerations.idle
             self.entitatActiva = None
             self.scheduler.afegirEsdeveniment(event_fi_servei)
 
-    def waitforavailability(self):
-        while self.server.state == Enumerations.busy:
-            pass
-
     def simulationStart(self):
         self.state = Enumerations.idle
         self.entitatsTractades = 0
-
-    def programarFinalServei(self, time, entitat):
-        tempsServei = self.tServei_B1()
-        return Event(self, 'END_SERVICE', time + tempsServei, entitat)
 
     def tServei_B1(self):
         return uniform(self.min, self.max)

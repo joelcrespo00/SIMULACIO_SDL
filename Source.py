@@ -42,10 +42,10 @@ class Source:
         self.state = Enumerations.busy
         cua = randrange(10)
         entitat = self.crearEntitat(self)
-        if cua % 2 == 0:  ##ENVIAR A QueueB1
-            return Event(self.queue1, 'NEW SERVICE', time + tempsEntreArribades, entitat)
+        if cua % 2 == 0:  # ENVIAR A QueueB1
+            return Event(self.queue1, 'NEW ENTITY', time + tempsEntreArribades, entitat)
         else:  # ENVIAR A SERVERB2
-            return Event(self.queue2, 'NEW SERVICE', time + tempsEntreArribades, entitat)
+            return Event(self.queue2, 'NEW ENTITY', time + tempsEntreArribades, entitat)
 
     def tArribades(self):
         min = self.min
